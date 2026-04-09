@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'motion/react';
-import { useState, useRef, Suspense } from 'react';
+import { useState, useRef, Suspense, useEffect, type ReactNode } from 'react';
 import {
   Microscope,
   Layers,
@@ -57,6 +57,53 @@ function SkinModel() {
   );
 }
 
+function WebGLErrorBoundary({ children, fallback }: { children: ReactNode; fallback: ReactNode }) {
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+      if (!gl) setHasError(true);
+    } catch {
+      setHasError(true);
+    }
+  }, []);
+
+  if (hasError) return <>{fallback}</>;
+  return <>{children}</>;
+}
+
+function Skin3DFallback() {
+  const layers = [
+    { name: 'Epidermis', depth: '0.1 - 1.5mm', color: 'bg-[#fce7d2]', border: 'border-[#f5d0a9]' },
+    { name: 'Dermis', depth: '1.5 - 4mm', color: 'bg-[#f8bbd0]', border: 'border-[#f48fb1]' },
+    { name: 'Hypodermis', depth: '4mm+', color: 'bg-[#fff59d]', border: 'border-[#fff176]' },
+  ];
+
+  return (
+    <div className="w-full h-[500px] bg-brand-cream/30 rounded-3xl overflow-hidden border border-brand-charcoal/5 flex items-center justify-center p-12">
+      <div className="w-full max-w-md space-y-3">
+        {layers.map((layer) => (
+          <motion.div
+            key={layer.name}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ scale: 1.03 }}
+            className={`${layer.color} ${layer.border} border-2 rounded-2xl p-6 flex justify-between items-center cursor-default`}
+          >
+            <span className="font-serif text-lg">{layer.name}</span>
+            <span className="text-xs text-brand-charcoal/50 uppercase tracking-widest">{layer.depth}</span>
+          </motion.div>
+        ))}
+        <p className="text-center text-brand-charcoal/30 text-xs mt-6 italic">
+          3D view requires a WebGL-capable browser
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function Skin3DView() {
   return (
     <div className="space-y-6">
@@ -68,33 +115,35 @@ function Skin3DView() {
         Rotate and zoom to explore the structural layers of the skin. Understanding anatomy is the first step to effective treatment.
       </p>
 
-      <div className="w-full h-[500px] bg-brand-cream/30 rounded-3xl overflow-hidden border border-brand-charcoal/5 relative">
-        <Canvas shadows>
-          <Suspense fallback={null}>
-            <PerspectiveCamera makeDefault position={[8, 5, 8]} fov={40} />
-            <OrbitControls enableDamping dampingFactor={0.05} />
+      <WebGLErrorBoundary fallback={<Skin3DFallback />}>
+        <div className="w-full h-[500px] bg-brand-cream/30 rounded-3xl overflow-hidden border border-brand-charcoal/5 relative">
+          <Canvas shadows>
+            <Suspense fallback={null}>
+              <PerspectiveCamera makeDefault position={[8, 5, 8]} fov={40} />
+              <OrbitControls enableDamping dampingFactor={0.05} />
 
-            <ambientLight intensity={0.7} />
-            <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
-            <pointLight position={[-10, -10, -10]} intensity={0.5} />
+              <ambientLight intensity={0.7} />
+              <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
+              <pointLight position={[-10, -10, -10]} intensity={0.5} />
 
-            <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.5}>
-              <SkinModel />
-            </Float>
+              <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.5}>
+                <SkinModel />
+              </Float>
 
-            <ContactShadows position={[0, -3, 0]} opacity={0.4} scale={10} blur={2} far={4.5} />
-          </Suspense>
-        </Canvas>
+              <ContactShadows position={[0, -3, 0]} opacity={0.4} scale={10} blur={2} far={4.5} />
+            </Suspense>
+          </Canvas>
 
-        <div className="absolute bottom-6 right-6 flex flex-col items-end space-y-2 pointer-events-none">
-          <div className="bg-white/80 backdrop-blur-md px-4 py-2 rounded-full text-[10px] uppercase tracking-widest font-bold shadow-sm">
-            Drag to Rotate
-          </div>
-          <div className="bg-white/80 backdrop-blur-md px-4 py-2 rounded-full text-[10px] uppercase tracking-widest font-bold shadow-sm">
-            Scroll to Zoom
+          <div className="absolute bottom-6 right-6 flex flex-col items-end space-y-2 pointer-events-none">
+            <div className="bg-white/80 backdrop-blur-md px-4 py-2 rounded-full text-[10px] uppercase tracking-widest font-bold shadow-sm">
+              Drag to Rotate
+            </div>
+            <div className="bg-white/80 backdrop-blur-md px-4 py-2 rounded-full text-[10px] uppercase tracking-widest font-bold shadow-sm">
+              Scroll to Zoom
+            </div>
           </div>
         </div>
-      </div>
+      </WebGLErrorBoundary>
     </div>
   );
 }
@@ -156,7 +205,7 @@ function MicroscopeView() {
             className="absolute w-64 h-64 rounded-full border-4 border-brand-gold shadow-[0_0_50px_rgba(0,0,0,0.3)] overflow-hidden pointer-events-none z-20"
           >
             <motion.img
-              src="https://images.unsplash.com/photo-1579154273851-3a5e23c50153?auto=format&fit=crop&q=80&w=1200"
+              src="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80&w=1200"
               style={{
                 position: 'absolute',
                 width: 1200,
@@ -322,7 +371,7 @@ function CosmeticCanvas() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="relative aspect-[4/5] bg-brand-cream rounded-[3rem] overflow-hidden border border-brand-charcoal/5">
           <img
-            src="https://images.unsplash.com/photo-1512290923902-8a9f81dc2069?auto=format&fit=crop&q=80&w=800"
+            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=800"
             className="w-full h-full object-cover opacity-60 grayscale"
             alt="Facial Map"
             crossOrigin="anonymous"
@@ -384,7 +433,7 @@ function CosmeticCarousel() {
     {
       title: 'Botox & Dysport',
       description: 'Precision injections to smooth fine lines and prevent wrinkles while maintaining natural expression.',
-      image: 'https://images.unsplash.com/photo-1512290902202-069f78a5d3d7?auto=format&fit=crop&q=80&w=800',
+      image: 'https://images.unsplash.com/photo-1559599101-f09722fb4948?auto=format&fit=crop&q=80&w=800',
     },
     {
       title: 'Dermal Fillers',
