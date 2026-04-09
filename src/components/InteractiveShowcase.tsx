@@ -371,7 +371,7 @@ function CosmeticCanvas() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="relative aspect-[4/5] bg-brand-cream rounded-[3rem] overflow-hidden border border-brand-charcoal/5">
           <img
-            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=800"
+            src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=800"
             className="w-full h-full object-cover opacity-60 grayscale"
             alt="Facial Map"
             crossOrigin="anonymous"
