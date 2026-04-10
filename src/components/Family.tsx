@@ -5,22 +5,29 @@ const doctors = [
     name: 'Dr. Fred M. Novice, MD',
     role: 'Founder & Board-Certified Dermatologist',
     bio: "42+ years of experience. Dual board-certified in dermatology and dermatopathology. Metro Detroit's Best Dermatologist for 10 consecutive years.",
-    image: 'https://storage.googleapis.com/boon-public-assets/Screenshot%202026-04-08%20at%204.31.58%E2%80%AFPM.png',
+    image: 'https://storage.googleapis.com/boon-public-assets/fnovice.jpg',
     stats: ['42+ Years Exp.', 'Dermatopathologist', 'Expert Injector'],
   },
   {
     name: 'Dr. Karlee D. Novice, MD',
     role: 'Board-Certified Dermatologist',
     bio: 'Chief Resident at Henry Ford Hospital. Published researcher in drug-induced phototoxicity and skin cancer education.',
-    image: 'https://storage.googleapis.com/boon-public-assets/Screenshot%202026-04-08%20at%204.32.11%E2%80%AFPM.png',
+    image: 'https://storage.googleapis.com/boon-public-assets/knovice.jpg',
     stats: ['11+ Years Exp.', 'Chief Resident', 'AAD Fellow'],
   },
   {
     name: 'Dr. Taylor Novice, MD, MBA',
     role: 'Board-Certified Dermatologist',
     bio: 'Summa Cum Laude from Duke, MD from U of M, MBA from Ross. Academic Chief Resident and Outstanding Resident Award recipient.',
-    image: 'https://storage.googleapis.com/boon-public-assets/Screenshot%202026-04-08%20at%204.32.18%E2%80%AFPM.png',
+    image: 'https://storage.googleapis.com/boon-public-assets/tnovice.jpg',
     stats: ['Dermatopathologist', 'MBA Healthcare', 'Top Resident'],
+  },
+  {
+    name: 'Erin Koppelman',
+    role: 'Licensed Aesthetician',
+    bio: 'Specialized in advanced skincare treatments and cosmetic procedures. Dedicated to helping patients achieve their best skin through personalized care.',
+    image: 'https://storage.googleapis.com/boon-public-assets/ekoppel.jpg',
+    stats: ['Licensed Aesthetician', 'Skincare Expert', 'Cosmetic Specialist'],
   },
 ];
 
@@ -36,11 +43,11 @@ export function Family() {
             Meet the Novice Physicians
           </h2>
           <p className="text-brand-charcoal/60 max-w-2xl mx-auto text-lg">
-            A father and his two daughters, all board-certified dermatologists trained at Henry Ford Hospital's prestigious program, working together to care for your family.
+            A father and his two daughters, all board-certified dermatologists trained at Henry Ford Hospital's prestigious program, joined by a licensed aesthetician, working together to care for your family.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {doctors.map((doc, i) => (
             <motion.div
               key={doc.name}
@@ -103,8 +110,8 @@ export function Family() {
             </div>
             <div className="w-[1px] h-12 bg-white/10" />
             <div className="text-center">
-              <div className="text-4xl font-serif text-brand-gold mb-2">3</div>
-              <div className="text-[10px] uppercase tracking-widest text-white/40">Board-Certified MDs</div>
+              <div className="text-4xl font-serif text-brand-gold mb-2">4</div>
+              <div className="text-[10px] uppercase tracking-widest text-white/40">Expert Providers</div>
             </div>
           </div>
         </motion.div>
